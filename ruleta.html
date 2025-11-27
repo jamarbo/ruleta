@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ruleta de Programación</title>
+    <style>
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #1a1a1a;
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            flex-direction: column;
+        }
+
+        .container {
+            text-align: center;
+            background-color: #2d2d2d;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 255, 127, 0.2);
+            max-width: 500px;
+            width: 90%;
+        }
+
+        h1 {
+            color: #00ff7f;
+            margin-bottom: 20px;
+        }
+
+        .display-box {
+            background-color: #000;
+            border: 2px solid #444;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            min-height: 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #language-display {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #ffffff;
+        }
+
+        #exercise-display {
+            font-size: 1rem;
+            color: #aaaaaa;
+            margin-top: 10px;
+            font-style: italic;
+        }
+
+        button {
+            background-color: #00ff7f;
+            color: #1a1a1a;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: transform 0.1s, background-color 0.3s;
+            box-shadow: 0 4px 15px rgba(0, 255, 127, 0.4);
+        }
+
+        button:hover {
+            background-color: #00cc66;
+            transform: scale(1.05);
+        }
+
+        button:active {
+            transform: scale(0.95);
+        }
+
+        button:disabled {
+            background-color: #555;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .winner {
+            color: #00ff7f !important;
+            text-shadow: 0 0 10px #00ff7f;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>&lt; Code Roulette /&gt;</h1>
+        
+        <div class="display-box">
+            <div id="language-display">???</div>
+            <div id="exercise-display">Presiona girar para obtener tu reto</div>
+        </div>
+
+        <button id="spin-btn" onclick="girarRuleta()">¡GIRAR!</button>
+    </div>
+
+    <script>
+        // Configuración de datos
+        const lenguajes = ['Java', 'JavaScript', 'Python', 'Kotlin', 'Rust', 'Go', 'C#'];
+        
+        const ejercicios = [
+            "Crea una función que calcule el factorial de un número.",
+            "Escribe un programa que verifique si una palabra es un palíndromo.",
+            "Imprime los números del 1 al 100 (FizzBuzz clásico).",
+            "Genera la secuencia de Fibonacci hasta el n-ésimo término.",
+            "Encuentra el número mayor en un array/lista desordenada.",
+            "Cuenta cuántas vocales tiene un string ingresado por el usuario.",
+            "Invierte el orden de las palabras en una oración."
+        ];
+
+        let intervalo;
+        const displayLang = document.getElementById('language-display');
+        const displayEx = document.getElementById('exercise-display');
+        const btn = document.getElementById('spin-btn');
+
+        function girarRuleta() {
+            // 1. Deshabilitar botón para evitar múltiples clics
+            btn.disabled = true;
+            btn.innerText = "Girando...";
+            displayLang.classList.remove('winner');
+            
+            // 2. Seleccionar el ejercicio primero
+            const ejercicioRandom = ejercicios[Math.floor(Math.random() * ejercicios.length)];
+            displayEx.innerText = `Reto: ${ejercicioRandom}`;
+
+            // 3. Animación de la ruleta (efecto tragamonedas)
+            let contador = 0;
+            const velocidad = 50; // milisegundos entre cambios
+            const vueltasMinimas = 20; 
+
+            intervalo = setInterval(() => {
+                // Mostrar lenguajes aleatorios rápidamente
+                const randomTemp = lenguajes[Math.floor(Math.random() * lenguajes.length)];
+                displayLang.innerText = randomTemp;
+                contador++;
+
+                // Detener la ruleta después de cierto tiempo
+                if (contador > vueltasMinimas && Math.random() > 0.8) {
+                    finalizarGiro();
+                }
+            }, velocidad);
+        }
+
+        function finalizarGiro() {
+            clearInterval(intervalo);
+            
+            // Selección final del ganador
+            const ganador = lenguajes[Math.floor(Math.random() * lenguajes.length)];
+            displayLang.innerText = ganador;
+            
+            // Efectos visuales de victoria
+            displayLang.classList.add('winner');
+            btn.disabled = false;
+            btn.innerText = "¡GIRAR OTRA VEZ!";
+        }
+    </script>
+</body>
+</html>
